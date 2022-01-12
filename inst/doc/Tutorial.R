@@ -147,8 +147,11 @@ ppc(fit_MGS)
 
 ## ----predictCC, eval=FALSE----------------------------------------------------
 #  data("Chiro_Creuzot")
-#  modelData_CC <- modelData(Male_Gammarus_Single, time_accumulation = 4)
+#  Chiro_Creuzot <- Chiro_Creuzot[Chiro_Creuzot$replicate == 1,]
+#  modelData_CC <- modelData(Chiro_Creuzot, time_accumulation = 1.0)
 #  fit_CC <- fitTK(modelData_CC, iter = 5000, chains = 3)
+#  # --------
+#  quantile_table(fit_CC)
 #  
 #  # Data 4 prediction should respect the exposure routes
 #  data_4pred <- data.frame( time = 1:25, expw = 18, exps = 1200, exppw = 15 )

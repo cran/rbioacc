@@ -3,14 +3,17 @@
 \name{plot_PriorPost}
 \alias{plot_PriorPost}
 \alias{plot_PriorPost.fitTK}
+\alias{plot_PriorPost.df_PP}
 \title{Plot Posterior over Prior}
 \usage{
-plot_PriorPost(fit, ...)
+plot_PriorPost(x, ...)
 
-\method{plot_PriorPost}{fitTK}(fit, select = "all", ...)
+\method{plot_PriorPost}{fitTK}(x, select = "all", ...)
+
+\method{plot_PriorPost}{df_PP}(x, select = "all", ...)
 }
 \arguments{
-\item{fit}{An object of class \code{fitTK} returned by the function \code{fitTK()}.}
+\item{x}{A data.frame of class \code{df_PP} returned by the function \code{df_PriorPost()}.}
 
 \item{\dots}{addition arguments}
 
@@ -19,6 +22,8 @@ Deterministic parameters can be selected by setting \code{"deterministic"} and
 stochastic parameter with \code{"stochastic"}.}
 }
 \value{
+A plot of class \code{ggplot}.
+
 A plot of class \code{ggplot}.
 }
 \description{

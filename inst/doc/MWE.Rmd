@@ -20,7 +20,7 @@ An issue can be an **error** but also an **improvement**. And improvement can be
 a new function as well as a better documentation (like a simple typo).
 Everything is welcome. There is no mistake when helping.
 
-(Click here to report an issue)[https://gitlab.in2p3.fr/sandrine.charles/rbioacc/-/issues]
+(Click here to report an issue)[https://github.com/aursiber/rbioacc/issues]
 
 To help returning issue, we provide here a set of *Minimal Working Example* (MWE)
 that you can modify to obtain yours.

@@ -177,3 +177,150 @@ predict.fitTK <- function(object, data, mcmc_size = NULL, fixed_init = TRUE, ...
     return(x)
   }
 }
+
+################################################################################
+#' Sampler of TK model using stan inference machine
+#'
+#' @rdname predict
+#' 
+#' @param time_interp A vector with additional time point to interpolate. 
+#' Time point of the original data set are conserved.
+#' @param iter Number of time steps
+#' 
+#' @export
+#'
+predict_stan <- function(object, data, mcmc_size = NULL, fixed_init = TRUE,
+                         time_interp = NULL, iter = 1000, ...) {
+  
+  iter <- ifelse(is.null(mcmc_size), iter, mcmc_size)
+
+  stanTKdata <- modelData_predictStan(object, data, mcmc_size, fixed_init, time_interp)
+  
+  stanfit <- rstan::sampling(stanmodels$TK_predict, data = stanTKdata, algorithm ="Fixed_param",  ...)
+  
+  out <- list(stanTKdata = stanTKdata, stanfit = stanfit, originTKdata = object$stanTKdata)
+  class(out) <- append("predictTKstan", class(out))
+  return(out)
+}
+
+# @rdname modelData
+# 
+# @export
+# 
+modelData_predictStan <- function(object, data, mcmc_size = NULL, fixed_init = TRUE, time_interp = NULL, ...){
+  
+  fit <- object
+  
+  fitDATA <- fit[["stanTKdata"]]
+  fitMCMC <- rstan::extract(fit[["stanfit"]])
+  
+  n_met <- fitDATA$n_met
+  N_samples <- nrow(fitMCMC$ku)
+  
+  # Exposure match
+  data_origin <- fitDATA$origin_data
+  
+  col_names_origin <- colnames(data_origin)[ .index_col_exposure(data_origin)]
+  Cexp_origin <- as.data.frame(data_origin[, col_names_origin])
+  colnames(Cexp_origin) <- col_names_origin
+  
+  col_names <- colnames(data)[ .index_col_exposure(data)]
+  Cexp <- as.data.frame(data[, col_names])
+  colnames(Cexp) <- col_names
+  
+  if(!(all(colnames(Cexp) %in% colnames(Cexp_origin)) && 
+       all(colnames(Cexp_origin) %in% colnames(Cexp)))){
+    stop("Exposure routes differ between 'fit' and 'data'")
+  }
+  
+  n_exp <- ncol(Cexp)
+  n_out <- fitDATA$n_out
+  
+  if(is.null(time_interp)){
+    lentp <- nrow(data)
+    tp <- data$time
+    # EXPOSURE
+    len_vt <- lentp
+    vt <- tp
+  } else{
+    tp <- unique(sort(c(time_interp, data$time)))
+    lentp <- length(tp)
+    # EXPOSURE
+    len_vt <- nrow(data)
+    vt <- data$time
+  }
+  
+  tacc <- fitDATA$tacc
+  rankacc <- match(tacc, tp)
+  
+  if(is.na(rankacc)){
+    stop("time for accumulation should be in data time vector")
+  }
+  
+  C0 <- fitDATA$C0
+  
+  km <- fitMCMC$km
+  kem <- fitMCMC$kem
+  
+  if(n_met == 0){
+    M = rep(0, N_samples)
+  } else{
+    M = fitMCMC$M
+  }
+
+  if(n_met == 0){
+    log10km = matrix(0, nrow = N_samples, ncol = n_met)
+    log10kem = matrix(0, nrow = N_samples, ncol = n_met)
+    sigmaCmetpred = matrix(0, nrow = N_samples, ncol = n_met)
+  } else{
+    log10km = fitMCMC$log10km
+    log10kem = fitMCMC$log10kem
+    sigmaCmetpred = fitMCMC$sigmaCmetpred
+  }
+  
+  if(is.null( fitMCMC$gmax)){
+    gmax =  matrix(0, nrow = N_samples, ncol = n_out - 1)
+    G0 = matrix(0, nrow = N_samples, ncol = n_out - 1)
+  } else{
+    gmax = fitMCMC$gmax
+    G0 = fitMCMC$G0
+  }
+
+  list_stan <- list(
+    lentp = lentp,
+    tp = tp,
+    
+    n_exp = n_exp,
+    n_out = n_out,
+    n_met = n_met,
+    Cexp = Cexp,
+    rankacc = rankacc,
+    tacc = tacc,
+    C0 = C0,
+    
+    len_vt = len_vt,
+    vt = vt,
+    
+    elim_rate = fitDATA$elim_rate,
+    
+    N_samples = N_samples,
+    log10ku = fitMCMC$log10ku,
+    log10ke = fitMCMC$log10ke,
+    
+    log10km = log10km,
+    log10kem = log10kem,
+    
+    M = M,
+    E = fitMCMC$E,
+    
+    sigmaCGpred = fitMCMC$sigmaCGpred,
+    sigmaCmetpred = sigmaCmetpred,
+    
+    gmax = gmax,
+    G0 = G0
+  )
+  
+  return(list_stan)
+  
+}
+

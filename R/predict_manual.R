@@ -7,6 +7,7 @@
 #' @param param A dataframe with name of parameters \code{kee}, \code{keg}, \code{ku1}, 
 #' \code{ku2}, ...,  \code{km1}, \code{km2}, ... and \code{kem1}, \code{kem2}, ...,
 #' \code{sigmaConc}, \code{sigmaCmet} (if metabolites) and \code{sigmaGrowth} (if growth).
+#' The parameter \code{kee} is mandatory.
 #' @param data A data set with one column \code{time} and 1 to 4 exposure 
 #' @param time_accumulation the time of accumulation.
 #' @param C0 Gives the initial conditions of internal concentration.

@@ -4,10 +4,13 @@
 \alias{plot.fitTK}
 \title{Plotting method for \code{fitTK} objects}
 \usage{
-\method{plot}{fitTK}(x, ...)
+\method{plot}{fitTK}(x, time_interp = NULL, ...)
 }
 \arguments{
 \item{x}{And object returned by fitTK}
+
+\item{time_interp}{A vector with additional time point to interpolate.
+Time point of the original data set are conserved.}
 
 \item{\dots}{Additional arguments}
 }

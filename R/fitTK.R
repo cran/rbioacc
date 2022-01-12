@@ -43,4 +43,4 @@ fitTK.stanTKdataCST <- function(stanTKdata, ...) {
    out <- list(stanTKdata = stanTKdata, stanfit = stanfit)
    class(out) <- append("fitTK", class(out))
    return(out)
-}
+ }

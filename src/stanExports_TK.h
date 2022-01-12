@@ -37,7 +37,7 @@ stan::io::program_reader prog_reader__() {
     reader.add_event(2, 0, "start", "/include/linear_interpolation.stan");
     reader.add_event(125, 123, "end", "/include/linear_interpolation.stan");
     reader.add_event(125, 3, "restart", "model_TK");
-    reader.add_event(343, 219, "end", "model_TK");
+    reader.add_event(338, 214, "end", "model_TK");
     return reader;
 }
 template <typename T0__, typename T1__>

@@ -2,14 +2,20 @@
 % Please edit documentation in R/plot_predict.R
 \name{plot.predictTK}
 \alias{plot.predictTK}
+\alias{plot.predictTKstan}
 \title{Plotting method for \code{predictTK} objects}
 \usage{
 \method{plot}{predictTK}(x, ...)
+
+\method{plot}{predictTKstan}(x, add_data = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{predictTK} returned by predict}
 
 \item{\dots}{Additional arguments}
+
+\item{add_data}{logical TRUE or FALSE to add the orignal data of the fit object
+\code{x}}
 }
 \value{
 A plot of class \code{ggplot}

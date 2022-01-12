@@ -209,11 +209,6 @@ generated quantities {
     //tp_y = Cexp[1:lentp, i] ;
     for(t in 1:len_vt){
       Cexp_interpol[t,i] = interpolate(vt[t], tp, Cexp[1:lentp, i]) ;
-      // if(tacc <= vt[t]){
-      //   
-      // } else{
-      //   
-      // }
     }
   }
 }

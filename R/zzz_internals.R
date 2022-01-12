@@ -56,6 +56,33 @@
   return(col_conc[!base::is.na(col_conc)])
 }
 
+#' Replace element of a vector
+#' 
+#' @param x a vector
+#' @param from a vector of elements to replace
+#' @param to a vector with replacing elements
+#' 
+#' @return a vector
+#' 
+#' @export
+#' 
+#' @examples  
+#' replace_(1:10,c(2,4,5,8), c(0,0,0,0))
+#' replace_(c(1,2,2,3,2),c(3,2), c(4,5))
+#' 
+#' 
+replace_ <- function(x,from,to){
+  if(length(from) != length(to)){
+    stop("length of `from` and `to` differs.")
+  }
+  for(i in 1:length(from)){
+    x <- replace(x, x %in% from[i], to[i])
+  }
+  return(x)
+}
+
+
+
 .readapt_time <- function(object, time_reference){
   obj_colname = base::colnames(object)
   lentp=length(time_reference)
@@ -208,6 +235,62 @@
       name <- paste0("concm",i)
       ls_out[[name]] <- .add_data(
         .df_quant95(fitMCMC$Cmet_out[,,i]),
+        fit$stanTKdata$tp,
+        fit$stanTKdata$Cmet[,i,],
+        name
+      )
+    }
+  }
+  
+  df <- do.call("rbind", ls_out)
+  
+  return(df)
+}
+
+
+.add_data_only = function(tp,data,id){
+  if(is.vector(data)){
+    df_init <- data.frame(data = rep("data", length(data)))
+    df_init$time = tp
+    df_init$observation = data
+    df_init$replicate = 1
+    df <- df_init
+  } else{
+    df_init <- data.frame(data = rep("data", nrow(data)))
+    ls <- lapply(1:ncol(data),
+                 function(i){
+                   df_init$time = tp
+                   df_init$observation = data[,i]
+                   df_init$replicate = i
+                   return(df_init)
+                 })
+    df <- do.call("rbind", ls)
+  }
+  df <- df[df$observation != Inf,]
+  df$variable <-  id
+  return(df)
+}
+
+.df_for_plot_data <- function(fit){
+  fitMCMC = rstan::extract(fit$stanfit)
+  # 
+  ls_out <- list()
+  ls_out$conc <- .add_data_only(
+    fit$stanTKdata$tp,
+    fit$stanTKdata$CGobs[,1,],
+    "conc"
+  )
+  if(dim(fitMCMC$CGobs_out)[3] == 2){
+    ls_out$growth <- .add_data_only(
+      fit$stanTKdata$tp,
+      fit$stanTKdata$CGobs[,2,],
+      "growth"
+    )
+  }
+  if("Cmet_out" %in% names(fitMCMC)){
+    for(i in 1:fit$stanTKdata$n_met){
+      name <- paste0("concm",i)
+      ls_out[[name]] <- .add_data_only(
         fit$stanTKdata$tp,
         fit$stanTKdata$Cmet[,i,],
         name

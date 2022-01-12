@@ -77,6 +77,8 @@ df_PriorPost.fitTK <- function(fit, select = "all", ...){
     type = c(rep("posterior", length(c_var1)), rep("prior", length(c_var2))),
     value = c(do.call("c", c_post), do.call("c", c_prior))
   )
+  class(df) <- append("df_PP", class(df))
+  
   return(df)
 }
 
@@ -88,7 +90,7 @@ df_PriorPost.fitTK <- function(fit, select = "all", ...){
 #' 
 #' @export
 #' 
-plot_PriorPost <- function(fit, ...){
+plot_PriorPost <- function(x, ...){
   UseMethod("plot_PriorPost")
 }
 
@@ -98,7 +100,7 @@ plot_PriorPost <- function(fit, ...){
 #' @rdname plot_PP
 #'
 #' 
-#' @param fit An object of class \code{fitTK} returned by the function \code{fitTK()}.
+#' @param x An object of class \code{fitTK} returned by the function \code{fitTK()}.
 #' @param select A string selecting the parameters. Defaults is \code{"all"} and select all parameters.
 #' Deterministic parameters can be selected by setting \code{"deterministic"} and 
 #' stochastic parameter with \code{"stochastic"}.
@@ -109,9 +111,9 @@ plot_PriorPost <- function(fit, ...){
 #' @export
 #' 
 #' 
-plot_PriorPost.fitTK <- function(fit, select = "all", ...){
+plot_PriorPost.fitTK <- function(x, select = "all", ...){
   
-  df <- df_PriorPost(fit, select)
+  df <- df_PriorPost(x, select)
   
   df$group <- paste0(df$parameter, df$type)
   
@@ -124,3 +126,31 @@ plot_PriorPost.fitTK <- function(fit, select = "all", ...){
   
 }
 
+#' @rdname plot_PP
+#'
+#' 
+#' @param x A data.frame of class \code{df_PP} returned by the function \code{df_PriorPost()}.
+#' @param select A string selecting the parameters. Defaults is \code{"all"} and select all parameters.
+#' Deterministic parameters can be selected by setting \code{"deterministic"} and 
+#' stochastic parameter with \code{"stochastic"}.
+#' @param \dots addition arguments
+#' 
+#' @return A plot of class \code{ggplot}.
+#' 
+#' @export
+#' 
+#' 
+plot_PriorPost.df_PP <- function(x, select = "all", ...){
+  
+  df <- x
+  
+  df$group <- paste0(df$parameter, df$type)
+  
+  ggplot(data = df, aes_string('value')) + 
+    theme_classic() +
+    scale_fill_manual(values = c("orange", "grey")) +
+    scale_x_log10() +
+    geom_density(aes_string(group = 'group', fill = 'type'), alpha = 0.5, color = NA) +
+    facet_wrap(~parameter, scales = "free")
+  
+}
