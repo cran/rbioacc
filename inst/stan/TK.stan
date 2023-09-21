@@ -18,11 +18,11 @@ data {
   // Internal concentraion
   // Growth
   int<lower=0> n_out ;
-  real CGobs[lentp, n_out, n_rep];
+  array[lentp, n_out, n_rep] real CGobs;
 
   // Metabolites
   int<lower=0> n_met ;
-  real Cmet[lentp, n_met, n_rep] ;
+  array[lentp, n_met, n_rep] real Cmet ;
 
   real<lower=0> gmaxsup ;
   
@@ -43,11 +43,11 @@ parameters {
   vector[n_met] log10km ;
   vector[n_met] log10kem ;
   
-  real<lower=0> sigmaCGpred[n_out] ; 
+  array[n_out] real<lower=0> sigmaCGpred ; 
   vector<lower=0>[n_met] sigmaCmetpred ;
   
-  real<lower=0> gmax[n_out - 1] ;
-  real<lower=0> G0[n_out -1];
+  array[n_out - 1] real<lower=0> gmax ;
+  array[n_out -1] real<lower=0> G0;
   
 }
 transformed parameters{
@@ -186,10 +186,10 @@ model {
 
 generated quantities {
   
-  real CGobs_out[lentp,n_out]; 
-  real Cmet_out[lentp,n_met];
+  array[lentp,n_out] real CGobs_out; 
+  array[lentp,n_met] real Cmet_out;
 
-  real Cexp_interpol[len_vt, n_exp];
+  array[len_vt, n_exp] real Cexp_interpol;
   //vector[lentp] tp_y ;
   
   for(t in 1:lentp){

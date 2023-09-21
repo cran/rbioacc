@@ -10,7 +10,7 @@ data {
   
   // Time points
   int<lower=0> lentp;
-  real tp[lentp] ;
+  array[lentp] real tp ;
   
   // Exposure profiles
   int<lower=0> n_exp ;
@@ -21,11 +21,11 @@ data {
   // Internal concentraion
   // Growth
   int<lower=0> n_out ;
-  real CGobs[lentp, n_out, n_rep];
+  array[lentp, n_out, n_rep] real CGobs;
 
   // Metabolites
   int<lower=0> n_met ;
-  real Cmet[lentp, n_met, n_rep] ;
+  array[lentp, n_met, n_rep] real Cmet ;
 
   //vector[1+n_met] y0;
   //real t0;
@@ -42,7 +42,7 @@ data {
   vector[len_vt] vt ;
   
   // Parameters for integration of differentiol equations
-  real y0[1+n_met];
+  array[1+n_met] real y0;
   real t0 ;
   
   // real rel_tol;
@@ -50,8 +50,8 @@ data {
   // int max_num_steps;
 }
 transformed data{
-  real x_r[1+lentp_rmNA+lentp_rmNA] ;
-  int x_int[5] ;
+  array[1+lentp_rmNA+lentp_rmNA] real x_r ;
+  array[5] int x_int ;
   
   x_r[1] = tacc ;
   
@@ -75,11 +75,11 @@ parameters {
   vector[n_met] log10km ;
   vector[n_met] log10kem ;
   
-  real<lower=0> sigmaCGpred[n_out] ; 
+  array[n_out] real<lower=0> sigmaCGpred ; 
   vector<lower=0>[n_met] sigmaCmetpred ;
   
-  real<lower=0> gmax[n_out - 1] ;
-  real<lower=0> G0[n_out -1];
+  array[n_out - 1] real<lower=0> gmax ;
+  array[n_out -1] real<lower=0> G0;
   
 }
 transformed parameters{
@@ -95,13 +95,13 @@ transformed parameters{
   matrix[lentp,n_out] CGpred ; 
   matrix[lentp,n_met] Cmetpred ;
 
-  // int n_val[5] ;
+  // array[5] int n_val ;
   // real theta ;
 
-  real y_sim[lentp, 1+n_met] ; 
+  array[lentp, 1+n_met] real y_sim ; 
   // matrix[lentp, 1+n_met] y_sim ;
   
-  real theta[n_exp+n_out+n_met+n_met] ;
+  array[n_exp+n_out+n_met+n_met] real theta ;
   
   for(i in 1:n_exp){
     ku[i] = 10 ^ log10ku[i] ;

@@ -30,14 +30,14 @@ data {
   matrix[N_samples, n_met] log10km ;
   matrix[N_samples, n_met] log10kem ;
 
-  real M[N_samples] ;
-  real E[N_samples] ;
+  array[N_samples] real M ;
+  array[N_samples] real E ;
 
-  real<lower=0> sigmaCGpred[N_samples, n_out] ;
+  array[N_samples, n_out] real<lower=0> sigmaCGpred ;
   matrix<lower=0>[N_samples, n_met] sigmaCmetpred ;
 
-  real<lower=0> gmax[N_samples, n_out - 1] ;
-  real<lower=0> G0[N_samples, n_out -1];
+  array[N_samples, n_out - 1] real<lower=0> gmax ;
+  array[N_samples, n_out -1] real<lower=0> G0;
 
 }
 parameters {
@@ -48,8 +48,8 @@ model {
 }
 generated quantities {
 
-  real CGobs_out[lentp,n_out];
-  real Cmet_out[lentp,n_met];
+  array[lentp,n_out] real CGobs_out;
+  array[lentp,n_met] real Cmet_out;
 
   matrix[lentp, n_exp] Cexp_interpol;
 

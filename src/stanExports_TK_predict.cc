@@ -7,7 +7,7 @@ using namespace Rcpp ;
 RCPP_MODULE(stan_fit4TK_predict_mod) {
 
 
-    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("model_TK_predict")
+    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("rstantools_model_TK_predict")
 
     .constructor<SEXP,SEXP,SEXP>()
 

@@ -24,11 +24,11 @@ real interpolate(real x, vector xpt, vector ypt){
 }
 //}
 
-real[] odeTK(real t,      // time
-             real[] y,    // variables
-             real[] theta,
-             real[] x_r,
-             int[] x_i) {
+array[] real odeTK(real t,      // time
+             array[] real y,    // variables
+             array[] real theta,
+             array[] real x_r,
+             array[] int x_i) {
   
   // parameters
   
@@ -38,20 +38,20 @@ real[] odeTK(real t,      // time
   int n_out = x_i[4] ; 
   int n_met = x_i[5] ;
 
-  real ku[n_exp] = theta[1:n_exp] ;
-  real ke[n_out] = theta[(n_exp+1):(n_exp+n_out)] ;
-  real km[n_met] = theta[(n_exp+n_out+1):(n_exp+n_out+n_met)] ;
-  real kem[n_met] = theta[(n_exp+n_out+n_met+1):(n_exp+n_out+n_met+n_met)] ;
+  array[n_exp] real ku = theta[1:n_exp] ;
+  array[n_out] real ke = theta[(n_exp+1):(n_exp+n_out)] ;
+  array[n_met] real km = theta[(n_exp+n_out+1):(n_exp+n_out+n_met)] ;
+  array[n_met] real kem = theta[(n_exp+n_out+n_met+1):(n_exp+n_out+n_met+n_met)] ;
    
   // vector[1+n_met] dydt ;
-  real dydt[1+n_met] ;
+  array[1+n_met] real dydt ;
   
   real tacc = x_r[1] ;
-  // real tp_rmNA[lentp_rmNA] = x_r[2:(lentp_rmNA+1)] ;
+  // array[lentp_rmNA] real tp_rmNA = x_r[2:(lentp_rmNA+1)] ;
   vector[lentp_rmNA] tp_rmNA = to_vector(x_r[2:(lentp_rmNA+1)]) ;
   // WORK ONLY FOR ONE EXPOSURE PROFILE
   
-  // real Cexp_rmNA[lentp_rmNA] = x_r[(lentp_rmNA+2):(lentp_rmNA+2+lentp_rmNA)] ;
+  // array[lentp_rmNA] real Cexp_rmNA = x_r[(lentp_rmNA+2):(lentp_rmNA+2+lentp_rmNA)] ;
   vector[lentp_rmNA] Cexp_rmNA = to_vector(x_r[(lentp_rmNA+2):(lentp_rmNA+1+lentp_rmNA)]) ;
 
   // latent vairable
@@ -91,12 +91,12 @@ real[] odeTK(real t,      // time
 
 
 // matrix solve_TK(
-//   real[] y0, real t0, real[] ts, real[] theta, int[] n_int,
-//   real tacc, real[] tp_rmNA, real[] Cexp_rmNA, real[] odeParam){
+//   array[] real y0, real t0, array[] real ts, array[] real theta, array[] int n_int,
+//   real tacc, array[] real tp_rmNA, array[] real Cexp_rmNA, array[] real odeParam){
 //     
 //     //vector[1+size(Cexp_rmNA) + size(tp_rmNA)] vector_r ;
-//     real vector_r[1+size(Cexp_rmNA) + size(tp_rmNA)]  ;
-//     // real vector_r[1+size(tp_rmNA)]  ;
+//     array[1+size(Cexp_rmNA) + size(tp_rmNA)] real vector_r  ;
+//     // array[1+size(tp_rmNA)] real vector_r  ;
 //     
 //     vector_r[1] = tacc ;
 //     // vector_r[2:(size(Cexp_rmNA)+1)] = tp_rmNA ;
