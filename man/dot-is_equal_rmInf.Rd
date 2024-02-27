@@ -2,7 +2,7 @@
 % Please edit documentation in R/zzz_internals.R
 \name{.is_equal_rmInf}
 \alias{.is_equal_rmInf}
-\title{Check if two vectors \code{x} and {y} are equal after remove \code{Inf}}
+\title{Check if two vectors \code{x} and \code{y} are equal after remove \code{Inf}}
 \usage{
 .is_equal_rmInf(x, y)
 }
@@ -15,5 +15,5 @@
 A logical value
 }
 \description{
-Check if two vectors \code{x} and {y} are equal after remove \code{Inf}
+Check if two vectors \code{x} and \code{y} are equal after remove \code{Inf}
 }

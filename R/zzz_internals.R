@@ -18,7 +18,7 @@
 }
 
 
-#' Check if two vectors \code{x} and {y} are equal after remove \code{Inf}
+#' Check if two vectors \code{x} and \code{y} are equal after remove \code{Inf}
 #' 
 #' @param x A vector
 #' @param y A vector
